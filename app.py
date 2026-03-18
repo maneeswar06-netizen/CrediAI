@@ -25,6 +25,16 @@ except ImportError:
 
 import itertools, urllib.parse as _urlparse
 
+def _get_secret(key: str, default: str = "") -> str:
+    """Safe secrets access for Render/cloud where .streamlit/secrets.toml may be missing."""
+    try:
+        if hasattr(st, "secrets") and st.secrets is not None:
+            v = st.secrets.get(key, default)
+            return str(v).strip() if v is not None else default
+    except Exception:
+        pass
+    return os.environ.get(key, default) or default
+
 st.set_page_config(page_title="CrediAI", page_icon="🛡", layout="wide")
 
 st.markdown("""
@@ -2366,7 +2376,7 @@ with st.sidebar:
     st.markdown("<hr/>", unsafe_allow_html=True)
     # ── Twitter/X Live Feed ──────────────────────────────────────────────
     st.markdown('<div style="font-family:\'JetBrains Mono\',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dd);margin-bottom:.45rem;">𝕏 Twitter / X</div>', unsafe_allow_html=True)
-    _secret_bearer = _urlparse.unquote(st.secrets.get("TW_BEARER", "")) if hasattr(st, "secrets") else ""
+    _secret_bearer = _urlparse.unquote(_get_secret("TW_BEARER", ""))
     tw_bearer = st.text_input(
         "Bearer Token",
         value=_secret_bearer,
@@ -2384,8 +2394,8 @@ with st.sidebar:
     st.markdown("<hr style='border-color:#1e3a5f;margin:.6rem 0'/>", unsafe_allow_html=True)
     st.markdown('<div style="font-family:\'JetBrains Mono\',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dd);margin-bottom:.45rem;">📷 Instagram</div>', unsafe_allow_html=True)
     st.caption("Instagram blocks anonymous API access. Log in with any Instagram account to enable real post fetching.")
-    _secret_ig_user = st.secrets.get("IG_USERNAME", "") if hasattr(st, "secrets") else ""
-    _secret_ig_pass = st.secrets.get("IG_PASSWORD", "") if hasattr(st, "secrets") else ""
+    _secret_ig_user = _get_secret("IG_USERNAME", "")
+    _secret_ig_pass = _get_secret("IG_PASSWORD", "")
     ig_username = st.text_input(
         "Instagram Username",
         value=_secret_ig_user,

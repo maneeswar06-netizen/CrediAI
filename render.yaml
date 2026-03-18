@@ -8,7 +8,11 @@ services:
     runtime: python
 
     # Build
-    buildCommand: pip install -r requirements.txt
+    # Ensure secrets.toml exists so Streamlit doesn't error on cloud (uses empty values if not set via env)
+    buildCommand: |
+      mkdir -p .streamlit
+      [ -f .streamlit/secrets.toml ] || cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+      pip install -r requirements.txt
 
     # Run Streamlit; Render sets PORT (e.g. 10000)
     startCommand: streamlit run app.py --server.address 0.0.0.0 --server.port $PORT
