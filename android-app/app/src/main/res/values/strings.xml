@@ -3,4 +3,6 @@
     <string name="app_name">CrediAI</string>
     <!-- Replace with your live Streamlit URL after deployment (e.g. https://your-app-name.streamlit.app) -->
     <string name="credi_app_url">https://crediai.onrender.com</string>
+    <string name="loading_title">Loading CrediAI…</string>
+    <string name="loading_hint">First launch may take up to a minute while the server wakes up.</string>
 </resources>

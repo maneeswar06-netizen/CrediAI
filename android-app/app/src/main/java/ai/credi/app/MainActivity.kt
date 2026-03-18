@@ -6,6 +6,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.view.View
 import android.widget.ProgressBar
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +15,7 @@ import androidx.core.view.isVisible
 class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
-    private lateinit var progressBar: ProgressBar
+    private lateinit var loadingOverlay: View
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,19 +23,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         webView = findViewById(R.id.webview)
-        progressBar = findViewById(R.id.progressBar)
+        loadingOverlay = findViewById(R.id.loadingOverlay)
 
         webView.apply {
             settings.apply {
                 javaScriptEnabled = true
                 domStorageEnabled = true
-                cacheMode = WebSettings.CACHE_MODE_DEFAULT
+                cacheMode = WebSettings.LOAD_DEFAULT
                 mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
                 userAgentString = settings.userAgentString
             }
             webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
-                    progressBar.isVisible = false
+                    loadingOverlay.isVisible = false
                 }
             }
             webChromeClient = WebChromeClient()
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         if (appUrl.isNotEmpty()) {
             webView.loadUrl(appUrl)
         } else {
-            progressBar.isVisible = false
+            loadingOverlay.isVisible = false
             webView.loadUrl("about:blank")
         }
 
