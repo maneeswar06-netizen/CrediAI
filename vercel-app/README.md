@@ -17,7 +17,11 @@ This folder is a **redirect** to the real CrediAI app (hosted on Render).
 4. Click **Deploy**.
 5. Your app will be at `https://your-project.vercel.app`.
 
-If you see *"No python entrypoint found"*, the root is wrong: Vercel is building the whole repo. Set Root Directory to **vercel-app** and redeploy.
+**If you still see "No python entrypoint found":**
+1. **Root Directory** must be **vercel-app** (Settings → General → Root Directory).
+2. **Override framework:** Settings → General → **Framework Preset** → set to **Other** (so Vercel does not use Python).
+3. **Build & Development:** Set **Build Command** to `npm run build` and **Output Directory** to `.` (or leave default).
+4. Save and **Redeploy**.
 
 ## APK
 
