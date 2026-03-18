@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CrediAI</string>
+    <!-- Replace with your live Streamlit URL after deployment (e.g. https://your-app-name.streamlit.app) -->
+    <string name="credi_app_url">https://your-app-name.streamlit.app</string>
+</resources>
