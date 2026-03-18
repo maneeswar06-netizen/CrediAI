@@ -1,8 +1,6 @@
 import streamlit as st
-# Direct submodule imports bypass transformers' lazy-loader (which breaks in Streamlit's exec context)
-from transformers.models.auto.tokenization_auto import AutoTokenizer
-from transformers.models.auto.modeling_auto import AutoModelForSequenceClassification
-import torch, re, feedparser, time, random, os, json
+import re, feedparser, time, random, os, json
+# torch + transformers imported lazily in load_model() to keep initial render light (avoids OOM on Render free tier)
 from datetime import datetime, timezone
 import hashlib, email.utils as _eu
 import urllib.request
@@ -971,6 +969,9 @@ except Exception:
 
 @st.cache_resource
 def load_model(name):
+    import torch
+    from transformers.models.auto.tokenization_auto import AutoTokenizer
+    from transformers.models.auto.modeling_auto import AutoModelForSequenceClassification
     t = AutoTokenizer.from_pretrained(name)
     m = AutoModelForSequenceClassification.from_pretrained(name)
     m.eval()
@@ -1041,6 +1042,7 @@ def _resolve_fake_real_indices(model, model_name=None):
     return 0, 1
 
 def infer(text, tok, mdl, fake_idx, real_idx, model_name=None):
+    import torch
     # hamzab model expects "<title> TITLE <content> CONTENT <end>"
     if model_name == "hamzab/roberta-fake-news-classification" and text.strip():
         if len(text.split()) <= 25:
